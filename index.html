@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+    <!-- <link rel="stylesheet" type="text/css" href="css/demo.css" /> -->
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" href="css/colpick.css"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<style>
+		#main{
+			width:540px;
+			height:960px;
+			background-color:red;
+			background: url('./images/test.jpg') no-repeat;
+			background-size: 540px 960px;
+			float: left;
+		}
+		#config{
+			width:540px;
+			height:960px;
+			float: left;
+			margin-left: 20px;
+			border: 1px solid red;
+		}
+		#config .content{
+			margin-top: 20px;
+			margin-left: 20px;
+		}
+		.name{
+			/*background-color: #ddd;*/
+			width: 150px;
+			height: 100px;
+			opacity:0.5;
+			line-height: 100px;
+		}
+		#canvas{
+			width:540px;
+			height:960px;
+			background-color: #ccc;
+			float: left;
+			margin-left: 20px;
+		}
+		.colpick_color div div{
+			background: url:('images/colpick_slider.png');
+		}
+	</style>
+</head>
+<body>
+<div id='main'>
+	<div class="name"></div>
+</div>
+<div id="config">
+	<div class='content'>
+		<label for="">Content：</label><input type="text" name='user_name'>
+	</div>
+	<div class='content'>
+		<label for="">Font-size：</label><input type="text" name='font_size'>
+	</div>
+	<div class='content'>
+		<button id='picker' class="btn btn-danger">Select font color</button>
+	</div>
+	<div class='content'>
+		<button id='save_config' class="btn btn-success">Save config</button>
+		<button id='save_image' class="btn btn-primary">Generate picture</button>
+	</div>
+
+	<div class="content">
+		<span style='color:red;'>Description：You can drag the rectangle</span>
+	</div>
+</div>
+<div id='canvas'>
+</div>
+</body>
+<script src='JavaScript/jquery1.7.2.js'></script>
+<script src='JavaScript/Tdrag.js'></script>
+<script src='JavaScript/html2canvas.min.js'></script>
+<script src='JavaScript/colpick.js'></script>
+
+<script>
+	$(function(){
+		$('#main .name').css('background-color','#ddd');
+
+		$('.name').Tdrag({
+			scope:'#main'
+		})
+
+		$('#picker').colpick({
+			layout:'hex',
+			onChange:function(hsb,hex,rgb){
+				$('#main .name').css('color','#'+hex);
+			},
+			onSubmit:function(hsb,hex,rgb,el){
+				$('#main .name').css('color','#'+hex);
+			},
+		});
+
+		$('#save_config').click(function(){
+			var user_name = $('input[name=user_name]').val();
+			var font_size = $('input[name=font_size]').val();
+			var font_color = $('input[name=font_color]').val();
+			$('#main .name').html(user_name);
+			$('#main .name').css('font-size',font_size + 'px');
+		})
+
+		$('#save_image').click(function(){
+			$('#main .name').css('background-color','');
+
+			html2canvas(document.getElementById('main')).then(function(canvas) {
+				document.getElementById('canvas').innerHTML = '';
+	    		document.getElementById('canvas').appendChild(canvas);
+				$('#main .name').css('background-color','#ddd');
+			});
+		})
+	})
+</script>
+</html>
